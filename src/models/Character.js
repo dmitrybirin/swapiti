@@ -8,17 +8,24 @@ const Character = types.model('Character', {
 export const CharacterList = types
 	.model('CharacterList', {
 		items: types.array(Character),
+		loading: types.boolean,
 	})
 	.actions(self => ({
 		load: flow(function* load() {
-			const res = yield window.fetch('https://swapi.co/api/people/')
-			const json = yield res.json()
-
-			self.items.push(
-				...json.results.map(c => ({
-					height: parseInt(c.height),
-					name: c.name,
-				}))
-			)
+			try {
+				self.loading = true
+				const res = yield window.fetch('https://swapi.co/api/people/')
+				const json = yield res.json()
+				self.items.push(
+					...json.results.map(c => ({
+						height: parseInt(c.height),
+						name: c.name,
+					}))
+				)
+			} catch (e) {
+				throw ('Error, while loading:\n', e)
+			} finally {
+				self.loading = false
+			}
 		}),
 	}))

@@ -12,6 +12,10 @@ const Title = styled.h1`
 	color: yellow;
 `
 
+const Container = styled.div`
+	color: white;
+`
+
 const List = styled.ul`
 	list-style: none;
 	color: white;
@@ -21,7 +25,7 @@ class App extends React.Component {
 	constructor() {
 		super()
 		this.state = {
-			list: CharacterList.create(),
+			list: CharacterList.create({ items: [], loading: false }),
 		}
 	}
 
@@ -31,19 +35,21 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<Container>
 				<Title>
 					Star Wars Api with MobX
 					<strike>-Wing</strike>
 				</Title>
-				<div>
+				{this.state.list.loading ? (
+					'Loading...'
+				) : (
 					<List>
 						{this.state.list.items.map(c => (
 							<li key={c.name}>{`${c.name}:${c.height}`}</li>
 						))}
 					</List>
-				</div>
-			</div>
+				)}
+			</Container>
 		)
 	}
 }
