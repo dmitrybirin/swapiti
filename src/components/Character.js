@@ -9,18 +9,31 @@ import GuessGame from './GuessGame'
 const Container = styled.div`
 	display: flex;
 	flex-direction: column;
-	align-content: center;
-	width: 50%;
+	justify-items: center;
 `
 
-const Character = () => {
-	return store.list.current ? (
+const Face = styled.div`
+	height: 70vh;
+	background-size: 500px;
+	background-position: center;
+	background-image: url(${props => props.src});
+	background-repeat: no-repeat;
+	background-clip: content-box;
+`
+
+const Name = styled.h1`
+	font-weight: 700;
+`
+
+const Character = () =>
+	store.list.current ? (
 		<Container>
-			{store.list.current.name}
+			<Face src={store.list.current.image}>
+				<Name>{store.list.current.name}</Name>
+			</Face>
 			<button onClick={() => store.list.getRandomCharacter()}>Bring new one!</button>
 			<GuessGame />
 		</Container>
 	) : null
-}
 
 export default hot(module)(observer(Character))

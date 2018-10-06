@@ -1,4 +1,4 @@
-import { types, addMiddleware } from 'mobx-state-tree'
+import { types, addMiddleware, onPatch } from 'mobx-state-tree'
 import makeInspectable from 'mobx-devtools-mst'
 import CharacterList from './CharacterList'
 import GuessGame from './GuessGame'
@@ -23,5 +23,11 @@ if (process.env.NODE_ENV === 'development') {
 		return next(call)
 	})
 }
+
+onPatch(store, patch => {
+	if (patch.op === 'replace' && patch.path === '/list/current') {
+		store.list.current.loadImage()
+	}
+})
 
 export default store

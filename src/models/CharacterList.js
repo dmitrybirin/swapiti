@@ -1,11 +1,27 @@
 import { types, flow } from 'mobx-state-tree'
 import { v4 } from 'uuid'
 
-export const Character = types.model('Character', {
-	id: types.identifier,
-	name: types.string,
-	height: types.number,
-})
+const getGifUrl = name =>
+	`https://api.giphy.com/v1/gifs/search?api_key=21hoXy1MH3bBJFIfGP5uXlWjwtTGwMP8&q=star%20wars%20${encodeURIComponent(
+		name
+	)}&limit=20`
+
+const getRandomElement = array => array[Math.floor(Math.random() * array.length)]
+
+export const Character = types
+	.model('Character', {
+		id: types.identifier,
+		name: types.string,
+		height: types.number,
+		image: types.maybe(types.string),
+	})
+	.actions(self => ({
+		loadImage: flow(function* load() {
+			const res = yield window.fetch(getGifUrl(self.name))
+			const json = yield res.json()
+			self.image = getRandomElement(json.data).images.original.url
+		}),
+	}))
 
 const CharacterList = types
 	.model('CharacterList', {
@@ -40,7 +56,7 @@ const CharacterList = types
 			}
 		}),
 		getRandomCharacter() {
-			self.current = self.items[Math.floor(Math.random() * self.items.length)]
+			self.current = getRandomElement(self.items)
 		},
 	}))
 
