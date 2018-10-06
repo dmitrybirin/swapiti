@@ -20,6 +20,7 @@ const Container = styled.div`
 class App extends React.Component {
 	async componentDidMount() {
 		await list.load()
+		list.getRandomCharacter()
 	}
 
 	render() {
