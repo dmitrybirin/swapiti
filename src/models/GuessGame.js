@@ -12,6 +12,11 @@ const GuessGame = types
 		changeGuess(guess) {
 			self.input = guess
 		},
+		reset() {
+			self.input = ''
+			self.showAnswer = false
+			getParent(self).list.getRandomCharacter()
+		},
 	}))
 	.views(self => ({
 		get diff() {

@@ -17,6 +17,7 @@ const GuessGame = () => {
 				<div>
 					<p>{`You have mistaken by ${game.diff}`}</p>
 					<p>{`Right answer is ${game.character.height}`}</p>
+					<button onClick={() => game.reset()}>Again!</button>
 				</div>
 			) : null}
 		</div>
