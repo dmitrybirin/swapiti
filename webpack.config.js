@@ -1,7 +1,9 @@
 const webpack = require('webpack')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 
-module.exports = {
+const isProduction = process.env.NODE_ENV === 'production'
+
+const webpackConfig = {
 	devtool: 'source-map',
 	module: {
 		rules: [
@@ -32,10 +34,18 @@ module.exports = {
 			template: './src/index.html',
 			filename: './index.html',
 		}),
-		new webpack.HotModuleReplacementPlugin(),
 	],
-	devServer: {
-		contentBase: './dist',
-		hot: true,
-	},
 }
+
+module.exports = !isProduction
+	? webpackConfig
+	: {
+			...webpackConfig,
+			...{
+				plugins: [...webpackConfig.plugins, new webpack.HotModuleReplacementPlugin()],
+				devServer: {
+					contentBase: './dist',
+					hot: true,
+				},
+			},
+	  }
