@@ -1,7 +1,7 @@
 import { types, flow } from 'mobx-state-tree'
 import { v4 } from 'uuid'
 
-const Character = types.model('Character', {
+export const Character = types.model('Character', {
 	id: types.identifier,
 	name: types.string,
 	height: types.number,
@@ -10,17 +10,24 @@ const Character = types.model('Character', {
 const CharacterList = types
 	.model('CharacterList', {
 		items: types.array(Character),
-		current: types.maybeNull(types.reference(Character), null),
+		current: types.maybe(types.reference(Character)),
 		loading: types.boolean,
 	})
 	.actions(self => ({
 		load: flow(function* load() {
 			try {
 				self.loading = true
-				const res = yield window.fetch('https://swapi.co/api/people/')
-				const json = yield res.json()
+				let data
+				if (localStorage.getItem('swapidata')) {
+					data = JSON.parse(localStorage.getItem('swapidata'))
+				} else {
+					const res = yield window.fetch('https://swapi.co/api/people/')
+					const json = yield res.json()
+					data = json.results
+					localStorage.setItem('swapidata', JSON.stringify(data))
+				}
 				self.items.push(
-					...json.results.map(c => ({
+					...data.map(c => ({
 						id: v4(),
 						height: parseInt(c.height),
 						name: c.name,
@@ -37,4 +44,4 @@ const CharacterList = types
 		},
 	}))
 
-export const list = CharacterList.create({ items: [], loading: false })
+export default CharacterList

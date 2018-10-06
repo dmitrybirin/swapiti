@@ -1,12 +1,26 @@
 import React from 'react'
-import { list } from '../models/Character'
+import store from '../models'
 import { observer } from 'mobx-react'
+import { hot } from 'react-hot-loader'
+import styled from 'styled-components'
 
-const Character = () => (
-	<div>
-		{list.current && list.current.name}
-		<button onClick={() => list.getRandomCharacter()}>Bring new one!</button>
-	</div>
-)
+import GuessGame from './GuessGame'
 
-export default observer(Character)
+const Container = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	width: 50%;
+`
+
+const Character = () => {
+	return store.list.current ? (
+		<Container>
+			{store.list.current.name}
+			<button onClick={() => store.list.getRandomCharacter()}>Bring new one!</button>
+			<GuessGame />
+		</Container>
+	) : null
+}
+
+export default hot(module)(observer(Character))

@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
 
-import { list } from './models/Character'
+import store from './models'
 import Character from './components/Character'
 import './App.css'
 
@@ -19,8 +19,8 @@ const Container = styled.div`
 
 class App extends React.Component {
 	async componentDidMount() {
-		await list.load()
-		list.getRandomCharacter()
+		await store.list.load()
+		store.list.getRandomCharacter()
 	}
 
 	render() {
@@ -30,7 +30,7 @@ class App extends React.Component {
 					Star Wars Api with MobX
 					<strike>-Wing</strike>
 				</Title>
-				{list.loading ? 'Loading...' : <Character />}
+				{store.list.loading ? 'Loading...' : <Character />}
 			</Container>
 		)
 	}
