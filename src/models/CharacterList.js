@@ -1,4 +1,4 @@
-import { types, flow } from 'mobx-state-tree'
+import { types, flow, onPatch } from 'mobx-state-tree'
 import { v4 } from 'uuid'
 
 const getGifUrl = name =>
@@ -57,6 +57,13 @@ const CharacterList = types
 		}),
 		getRandomCharacter() {
 			self.current = getRandomElement(self.items)
+		},
+		afterCreate() {
+			onPatch(self, patch => {
+				if (patch.op === 'replace' && patch.path === '/current') {
+					self.current.loadImage()
+				}
+			})
 		},
 	}))
 
