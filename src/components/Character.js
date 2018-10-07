@@ -5,24 +5,27 @@ import { hot } from 'react-hot-loader'
 import styled from 'styled-components'
 
 import GuessGame from './GuessGame'
+import Button from './SDK/Button'
 
 const Container = styled.div`
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	justify-items: center;
 `
 
 const Face = styled.div`
-	height: 70vh;
-	background-size: 500px;
+	width: 100vh;
+	height: 300px;
 	background-position: center;
 	background-image: url(${props => props.src});
 	background-repeat: no-repeat;
-	background-clip: content-box;
+	background-clip: border-box;
 `
 
 const Name = styled.h1`
 	font-weight: 700;
+	text-align: center;
 `
 
 const Character = () =>
@@ -31,7 +34,7 @@ const Character = () =>
 			<Face src={store.list.current.image}>
 				<Name>{store.list.current.name}</Name>
 			</Face>
-			<button onClick={() => store.list.getRandomCharacter()}>Bring new one!</button>
+			<Button onClick={() => store.list.getRandomCharacter()}>Bring new one!</Button>
 			<GuessGame />
 		</Container>
 	) : null
